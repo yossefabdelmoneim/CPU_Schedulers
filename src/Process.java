@@ -10,6 +10,8 @@ public class Process {
     private int turnaroundTime;
     private int completionTime;
     private int lastExecutedTime;
+    private int totalReadyQueueTime;
+
 
     public Process(String name, int arrivalTime, int burstTime, int priority, int quantum) {
         this.name = name;
@@ -22,6 +24,7 @@ public class Process {
         this.turnaroundTime = 0;
         this.completionTime = 0;
         this.lastExecutedTime = arrivalTime;
+        this.totalReadyQueueTime = 0;
     }
 
     public Process(Process other) {
@@ -35,6 +38,7 @@ public class Process {
         this.turnaroundTime = other.turnaroundTime;
         this.completionTime = other.completionTime;
         this.lastExecutedTime = other.lastExecutedTime;
+        this.totalReadyQueueTime = other.totalReadyQueueTime;
     }
 
     public String getName() {
@@ -77,6 +81,10 @@ public class Process {
         return this.lastExecutedTime;
     }
 
+
+
+    public int getTotalReadyQueueTime() {return totalReadyQueueTime;}
+
     public void setRemainingBurstTime(int remainingBurstTime) {
         this.remainingBurstTime = remainingBurstTime;
     }
@@ -104,4 +112,7 @@ public class Process {
     public void setLastExecutedTime(int lastExecutedTime) {
         this.lastExecutedTime = lastExecutedTime;
     }
+
+    public void incrementReadyQueueTime(int value) {totalReadyQueueTime = totalReadyQueueTime + value;}
+
 }
