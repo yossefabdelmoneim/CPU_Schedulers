@@ -37,6 +37,25 @@ public void execute() {
             Process selected = null;
             int bestEffectivePriority = Integer.MAX_VALUE;
 
+//            for (Process p : readyQueue) {
+//                int effectivePriority;
+//
+//                //Only apply aging if wait time is GREATER THAN aging interval
+//                if (p.getTotalReadyQueueTime() > agingInterval) {
+//                    int agingFactor = p.getTotalReadyQueueTime() / agingInterval;
+//                    effectivePriority = p.getPriority() - agingFactor;
+//                } else {
+//                    //No aging yet
+//                    effectivePriority = p.getPriority();
+//                }
+//
+//                if (selected == null || effectivePriority < bestEffectivePriority || (effectivePriority == bestEffectivePriority && p.getArrivalTime() < selected.getArrivalTime())) {
+//                    selected = p;
+//                    bestEffectivePriority = effectivePriority;
+//                }
+//            }
+
+            //regular aging
             for (Process p : readyQueue) {
                 int agingFactor = p.getTotalReadyQueueTime() / agingInterval;
                 int effectivePriority = p.getPriority() - agingFactor;
@@ -49,13 +68,7 @@ public void execute() {
 
             //context switching
             if (currentProcess != null && currentProcess != selected) {
-                for (Process p : readyQueue) {
-                    p.incrementReadyQueueTime(contextSwitching);
-                }
-                currentTime += contextSwitching;
-
-                //check for arrivals during/after context switch
-                addArrivingProcesses(readyQueue, completed, currentTime);
+                contextSwitch(readyQueue, completed, currentProcess);
             }
 
             //execute for 1 time unit
@@ -77,6 +90,8 @@ public void execute() {
                 selected.setTurnaroundTime(currentTime - selected.getArrivalTime());
                 selected.setWaitingTime(selected.getTurnaroundTime() - selected.getBurstTime());
 
+                contextSwitch(readyQueue, completed, currentProcess);
+
                 completed.add(selected);
                 readyQueue.remove(selected);
                 currentProcess = null;
@@ -88,6 +103,7 @@ public void execute() {
     }
 }
 
+
     //helper method to add arriving processes
     private void addArrivingProcesses(List<Process> readyQueue, List<Process> completed, int time) {
         for (Process p : processes) {
@@ -95,6 +111,18 @@ public void execute() {
                 readyQueue.add(p);
             }
         }
+    }
+
+    private void contextSwitch(List<Process> readyQueue, List<Process> completed, Process currentProcess) {
+        for (Process p : readyQueue) {
+            if (p != currentProcess) {
+            p.incrementReadyQueueTime(contextSwitching);
+            }
+        }
+        currentTime += contextSwitching;
+
+        //check for arrivals during/after context switch
+        addArrivingProcesses(readyQueue, completed, currentTime);
     }
 
     public void printResults() {
