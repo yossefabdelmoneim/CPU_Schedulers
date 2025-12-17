@@ -91,9 +91,7 @@ public void execute() {
     //helper method to add arriving processes
     private void addArrivingProcesses(List<Process> readyQueue, List<Process> completed, int time) {
         for (Process p : processes) {
-            if (p.getArrivalTime() == time &&
-                    !readyQueue.contains(p) &&
-                    !completed.contains(p)) {
+            if (p.getArrivalTime() <= time && !readyQueue.contains(p) && !completed.contains(p)) {
                 readyQueue.add(p);
             }
         }

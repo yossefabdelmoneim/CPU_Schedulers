@@ -24,11 +24,12 @@ public class SJFScheduler {
         String lastProcessName = null;
 
         while(completed.size() < this.processes.size()) {
-            for(Process p : this.processes) {
-                if (p.getArrivalTime() == this.currentTime && p.getRemainingBurstTime() > 0) {
-                    readyQueue.add(p);
-                }
-            }
+//            for(Process p : this.processes) {
+//                if (p.getArrivalTime() == this.currentTime && p.getRemainingBurstTime() > 0) {
+//                    readyQueue.add(p);
+//                }
+//            }
+            addArrivingProcesses(readyQueue, completed, currentTime);
 
             if (!readyQueue.isEmpty()) {
                 Process shortestJob = (Process)readyQueue.get(0);
@@ -42,7 +43,11 @@ public class SJFScheduler {
                 }
 
                 if (currentProcess != shortestJob && lastProcessName != null) {
-                    this.currentTime += this.contextSwitching;
+                    //context switching
+                        currentTime += contextSwitching;
+                        //check for arrivals during/after context switch
+                        addArrivingProcesses(readyQueue, completed, currentTime);
+
                 }
 
                 currentProcess = shortestJob;
@@ -63,6 +68,14 @@ public class SJFScheduler {
             }
         }
 
+    }
+    //helper method to add arriving processes
+    private void addArrivingProcesses(List<Process> readyQueue, List<Process> completed, int time) {
+        for (Process p : processes) {
+            if (p.getArrivalTime() <= time && !readyQueue.contains(p) && !completed.contains(p)) {
+                readyQueue.add(p);
+            }
+        }
     }
 
     public void printResults() {

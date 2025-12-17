@@ -3,7 +3,7 @@ import java.util.List;
 
 public class main {
     public static void main(String[] args){
-        // create process list
+
         List<Process> processes = new ArrayList<>();
 
         // name, arrival, burst, priority, quantum
@@ -16,12 +16,19 @@ public class main {
         int contextSwitch = 1;
         int agingInterval = 5;
 
-        // run priority scheduler
+        // run sjf scheduler
+        System.out.println("\n--- sjf test ---");
+        SJFScheduler sjf = new SJFScheduler(processes, contextSwitch);
+        sjf.execute();
+        sjf.printResults();
+
+        // run priority scheduler with aging
         System.out.println("\n--- priority test ---");
         PriorityScheduler priority =
                 new PriorityScheduler(processes, contextSwitch, agingInterval);
         priority.execute();
         priority.printResults();
 
+        // rr and ag schedulers can be added later
     }
 }
