@@ -23,5 +23,16 @@ public class main {
         priority.execute();
         priority.printResults();
 
+
+        System.out.println("\n--- AG test ---");
+        AG_Scheduling scheduling = new AG_Scheduling(processes);
+        // Sample processes
+        processes.add(new Process("p1", 0, 17, 2, 8));
+        processes.add(new Process("p2", 2, 6, 1, 6));
+        processes.add(new Process("p3", 4, 10, 3, 7));
+
+
+        scheduling.simulate();
+
     }
 }
