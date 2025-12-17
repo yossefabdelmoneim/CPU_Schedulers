@@ -79,34 +79,34 @@ public class SJFScheduler {
     }
 
     public void printResults() {
-        System.out.println("\n=== Preemptive Shortest-Job First (SJF) Scheduling ===");
-        System.out.print("Processes Execution Order: ");
-        String lastProcess = "";
-        int startTime = 0;
 
-        for(int i = 0; i < this.executionOrder.size(); ++i) {
-            if (!((String)this.executionOrder.get(i)).equals(lastProcess)) {
-                if (!lastProcess.isEmpty()) {
-                    System.out.print(lastProcess + " -> ");
-                }
+        System.out.println("\n=== SJF  Scheduling ===");
+        System.out.print("Execution Order: ");
 
-                lastProcess = (String)this.executionOrder.get(i);
+        String last = "";
+        for (String p : executionOrder) {
+            if (!p.equals(last)) {
+                System.out.print(p + " ");
+                last = p;
             }
         }
 
-        System.out.println(lastProcess);
-        System.out.println("\nProcess   Waiting Time  Turnaround Time");
-        double totalWaiting = (double)0.0F;
-        double totalTurnaround = (double)0.0F;
+        System.out.println("\n\nProcess   Waiting Time   Turnaround Time");
 
-        for(Process p : this.processes) {
-            System.out.printf(p.getName(), p.getWaitingTime(), p.getTurnaroundTime());
-            totalWaiting += (double)p.getWaitingTime();
-            totalTurnaround += (double)p.getTurnaroundTime();
+        double totalWT = 0, totalTAT = 0;
+        for (Process p : processes) {
+            System.out.printf("%-10s %-14d %-15d%n",
+                    p.getName(),
+                    p.getWaitingTime(),
+                    p.getTurnaroundTime());
+            totalWT += p.getWaitingTime();
+            totalTAT += p.getTurnaroundTime();
         }
 
-        System.out.printf(String.valueOf(totalWaiting / (double)this.processes.size()));
-        System.out.printf(String.valueOf(totalTurnaround / (double)this.processes.size()));
+        System.out.printf("%nAverage Waiting Time = %.2f%n",
+                totalWT / processes.size());
+        System.out.printf("Average Turnaround Time = %.2f%n",
+                totalTAT / processes.size());
     }
 
     public List<Process> getProcesses() {
