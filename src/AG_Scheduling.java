@@ -35,7 +35,7 @@ class AG_Scheduling{
 
         // Add initially arrived processes
         checkArrivals();
-
+        //
         current = readyQueue.getFirst();
 
             for (Process p : readyQueue) {
@@ -130,7 +130,7 @@ class AG_Scheduling{
 
 
             // Phase 3: SJF - Execute remaining quantum
-            int remainingQ = currentQuantum - (executed );
+            int remainingQ = currentQuantum - (executed);
             boolean preempted = false;
 
             while (remainingQ > 0 && current.getRemainingBurstTime() > 0) {
@@ -151,7 +151,6 @@ class AG_Scheduling{
                 // check whether a shorter job has arrived
                 if (current != selected) {
                     current.setQuantum(current.getQuantum() + remainingQ);
-//                    currentlyExecuting = null;
                     preempted = true;
                     current = selected;
                     break;
@@ -162,12 +161,12 @@ class AG_Scheduling{
 
             // Handle process completion or quantum exhaustion
             if(!preempted) {
-                if (current.getRemainingBurstTime() == 0) {
+                if (current.getRemainingBurstTime() < 0) {
                     finish(current);
                     completed++;
                     continue;
                 }
-                else if (remainingQ == 0) {
+                else if (remainingQ < 0) {
                     // Used full quantum, still has work to do
                     current.setQuantum(current.getQuantum() + 2);
                 }
@@ -216,6 +215,9 @@ class AG_Scheduling{
         if(processes.size() > completed) {
             for (Process proc : readyQueue) {
                 if (proc.getArrivalTime() <= current.getArrivalTime()) {
+                    current = proc;
+                }
+                if (proc.getRemainingBurstTime() > 0 && current.getRemainingBurstTime()<= 0) {
                     current = proc;
                 }
             }
