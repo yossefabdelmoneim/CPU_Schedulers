@@ -80,6 +80,10 @@ public class Process {
         quantumHistory.add(q);
     }
 
+    public void setLastExecutedTime(int t) {
+        waitingTime = t;
+    }
+
     public void setCompletionTime(int t) {
         completionTime = t;
     }
@@ -95,8 +99,13 @@ public class Process {
         quantumHistory.set(lastIndex, quantumHistory.get(lastIndex) + t);
     }
 
-//    public int getLastExecutedTime() {
-//        if (quantumHistory.isEmpty()) return 0;
-//        return burstTime - remainingBurstTime - getTotalReadyQueueTime();
-//    }
+    public int getLastExecutedTime() {
+        if (quantumHistory.isEmpty()) return 0;
+        return burstTime - remainingBurstTime - getTotalReadyQueueTime();
+    }
+
+    public void computeTurnaroundAndWaiting() {
+        turnaroundTime = completionTime - arrivalTime;
+        waitingTime = turnaroundTime - burstTime;
+    }
 }
