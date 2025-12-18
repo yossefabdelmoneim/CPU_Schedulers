@@ -6,10 +6,13 @@ import java.util.List;
 class AG_Scheduling{
 
     private List<Process> processes;
-    private Queue<Process> readyQueue;
+    private List<Process> readyQueue;
     private List<String> executionOrder; // To track execution order of processes
     private int currentTime;
     private Process currentlyExecuting; // Currently executing process
+    private Process current;
+    int completed = 0;
+
 
     // Constructor
     public AG_Scheduling(List<Process> processes) {
@@ -27,12 +30,20 @@ class AG_Scheduling{
     // Main simulation method
     public void simulate() {
         // Total number of completed processes
-        int completed = 0;
 
         int n = processes.size();
 
         // Add initially arrived processes
         checkArrivals();
+
+        current = readyQueue.getFirst();
+
+            for (Process p : readyQueue) {
+                if (p.getArrivalTime() < current.getArrivalTime()) {
+                    current = p;
+                }
+            }
+
 
         // Main loop
         while (completed < n) {
@@ -43,8 +54,9 @@ class AG_Scheduling{
                 continue;
             }
 
-            Process current = readyQueue.poll(); // poll(): retrieve and remove head of queue
-            currentlyExecuting = current;
+
+
+
             int currentQuantum = current.getQuantum();
             // execute for up to currentQuantum
             int executed = 0;
@@ -65,13 +77,19 @@ class AG_Scheduling{
                 continue;
             }
 
+            Process selected = current;
+            for (Process p : readyQueue) {
+                if(p.getPriority() < selected.getPriority()) {
+                    selected = p;
+                }
+            }
+
             // check whether the current process has higher priority than any newly arrived process
-            if (hasHigherPriority(current.getPriority())) {
+            if (selected != current) {
                 int remainingQ = currentQuantum - executed;
                 int quantumIncrease = (int) Math.ceil(remainingQ / 2.0);
                 current.setQuantum(current.getQuantum() + quantumIncrease);
-                // add current process to queue
-                readyQueue.add(current);
+                current = selected;
                 // preempt current process
                 currentlyExecuting = null;
                 continue;
@@ -91,6 +109,26 @@ class AG_Scheduling{
                 continue;
             }
 
+
+            for(Process p : readyQueue) {
+                if(p.getRemainingBurstTime() < current.getRemainingBurstTime()) {
+                    selected = p;
+                }
+                else if (p.getRemainingBurstTime() == selected.getRemainingBurstTime() && p.getPriority() < selected.getPriority()) {
+                    selected = p;
+                }
+            }
+
+            // check whether a shorter job has arrived
+            if (current != selected) {
+                int remainingQ = currentQuantum - executed;
+                current.setQuantum(current.getQuantum() + remainingQ);
+                current = selected;
+                currentlyExecuting = null;
+                continue;
+            }
+
+
             // Phase 3: SJF - Execute remaining quantum
             int remainingQ = currentQuantum - (executed );
             boolean preempted = false;
@@ -101,24 +139,37 @@ class AG_Scheduling{
                 checkArrivals(); // Check for new arrivals after each time unit
 
                 // Check if a shorter job has arrived
-                if (hasShorterJob(current.getRemainingBurstTime())) {
+                for(Process p : readyQueue) {
+                    if(p.getRemainingBurstTime() < current.getRemainingBurstTime()) {
+                        selected = p;
+                    }
+                    else if (p.getRemainingBurstTime() == selected.getRemainingBurstTime() && p.getPriority() < selected.getPriority()) {
+                        selected = p;
+                    }
+                }
+
+                // check whether a shorter job has arrived
+                if (current != selected) {
                     current.setQuantum(current.getQuantum() + remainingQ);
-                    readyQueue.add(current);
-                    currentlyExecuting = null;
+//                    currentlyExecuting = null;
                     preempted = true;
+                    current = selected;
                     break;
                 }
             }
 
+
+
             // Handle process completion or quantum exhaustion
-            if (!preempted && currentlyExecuting != null) {
+            if(!preempted) {
                 if (current.getRemainingBurstTime() == 0) {
                     finish(current);
                     completed++;
-                } else if (remainingQ == 0) {
+                    continue;
+                }
+                else if (remainingQ == 0) {
                     // Used full quantum, still has work to do
                     current.setQuantum(current.getQuantum() + 2);
-                    readyQueue.add(current);
                 }
                 currentlyExecuting = null;
             }
@@ -160,6 +211,19 @@ class AG_Scheduling{
         p.setTurnaroundTime(currentTime - p.getArrivalTime());
         p.setWaitingTime(p.getTurnaroundTime() - p.getBurstTime());
         p.setQuantum(0); // Set quantum to 0 when process completes
+        readyQueue.remove(p);
+
+        if(processes.size() > completed) {
+            for (Process proc : readyQueue) {
+                if (proc.getArrivalTime() <= current.getArrivalTime()) {
+                    current = proc;
+                }
+            }
+        }
+        else{
+            current = null;
+            currentlyExecuting = null;
+        }
     }
 
     private boolean hasHigherPriority(int priority) {

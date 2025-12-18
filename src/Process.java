@@ -94,4 +94,9 @@ public class Process {
         int lastIndex = quantumHistory.size() - 1;
         quantumHistory.set(lastIndex, quantumHistory.get(lastIndex) + t);
     }
+
+//    public int getLastExecutedTime() {
+//        if (quantumHistory.isEmpty()) return 0;
+//        return burstTime - remainingBurstTime - getTotalReadyQueueTime();
+//    }
 }

@@ -37,7 +37,7 @@ public class SJFScheduler {
                 for(Process p : readyQueue) {
                     if (p.getRemainingBurstTime() < shortestJob.getRemainingBurstTime()) {
                         shortestJob = p;
-                    } else if (p.getRemainingBurstTime() == shortestJob.getRemainingBurstTime() && p.getArrivalTime() < shortestJob.getArrivalTime()) {
+                    } else if (p.getRemainingBurstTime() == shortestJob.getRemainingBurstTime() && p.getPriority() < shortestJob.getPriority()) {
                         shortestJob = p;
                     }
                 }
