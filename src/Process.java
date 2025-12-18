@@ -115,4 +115,6 @@ public class Process {
 
     public void incrementReadyQueueTime(int value) {totalReadyQueueTime = totalReadyQueueTime + value;}
 
+    public void resetReadyQueueTime() {totalReadyQueueTime = 0;}
+
 }

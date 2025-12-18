@@ -37,34 +37,34 @@ public void execute() {
             Process selected = null;
             int bestEffectivePriority = Integer.MAX_VALUE;
 
-//            for (Process p : readyQueue) {
-//                int effectivePriority;
-//
-//                //Only apply aging if wait time is GREATER THAN aging interval
-//                if (p.getTotalReadyQueueTime() > agingInterval) {
-//                    int agingFactor = p.getTotalReadyQueueTime() / agingInterval;
-//                    effectivePriority = p.getPriority() - agingFactor;
-//                } else {
-//                    //No aging yet
-//                    effectivePriority = p.getPriority();
-//                }
-//
-//                if (selected == null || effectivePriority < bestEffectivePriority || (effectivePriority == bestEffectivePriority && p.getArrivalTime() < selected.getArrivalTime())) {
-//                    selected = p;
-//                    bestEffectivePriority = effectivePriority;
-//                }
-//            }
-
-            //regular aging
             for (Process p : readyQueue) {
-                int agingFactor = p.getTotalReadyQueueTime() / agingInterval;
-                int effectivePriority = p.getPriority() - agingFactor;
+                int effectivePriority;
+
+                //Only apply aging if wait time is GREATER THAN aging interval
+                if (p.getTotalReadyQueueTime() > agingInterval) {
+                    int agingFactor = p.getTotalReadyQueueTime() / agingInterval;
+                    effectivePriority = p.getPriority() - agingFactor;
+                } else {
+                    //No aging yet
+                    effectivePriority = p.getPriority();
+                }
 
                 if (selected == null || effectivePriority < bestEffectivePriority || (effectivePriority == bestEffectivePriority && p.getArrivalTime() < selected.getArrivalTime())) {
                     selected = p;
                     bestEffectivePriority = effectivePriority;
                 }
             }
+
+            //regular aging
+//            for (Process p : readyQueue) {
+//                int agingFactor = p.getTotalReadyQueueTime() / agingInterval;
+//                int effectivePriority = p.getPriority() - agingFactor;
+//
+//                if (selected == null || effectivePriority < bestEffectivePriority || (effectivePriority == bestEffectivePriority && p.getArrivalTime() < selected.getArrivalTime())) {
+//                    selected = p;
+//                    bestEffectivePriority = effectivePriority;
+//                }
+//            }
 
             //context switching
             if (currentProcess != null && currentProcess != selected) {
@@ -82,6 +82,7 @@ public void execute() {
             }
 
             selected.setRemainingBurstTime(selected.getRemainingBurstTime() - 1);
+            selected.resetReadyQueueTime();
             currentTime++;
 
             //completion
