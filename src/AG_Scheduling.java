@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.List;
+import java.util.*;
 
 class AG_Scheduling{
 
@@ -38,11 +35,11 @@ class AG_Scheduling{
         //
         current = readyQueue.getFirst();
 
-            for (Process p : readyQueue) {
-                if (p.getArrivalTime() < current.getArrivalTime()) {
-                    current = p;
-                }
+        for (Process p : readyQueue) {
+            if (p.getArrivalTime() < current.getArrivalTime()) {
+                current = p;
             }
+        }
 
 
         // Main loop
@@ -77,6 +74,7 @@ class AG_Scheduling{
                 continue;
             }
 
+            // check whether the current process has higher priority than any newly arrived process
             Process selected = current;
             for (Process p : readyQueue) {
                 if(p.getPriority() < selected.getPriority()) {
@@ -84,11 +82,13 @@ class AG_Scheduling{
                 }
             }
 
-            // check whether the current process has higher priority than any newly arrived process
+
             if (selected != current) {
                 int remainingQ = currentQuantum - executed;
                 int quantumIncrease = (int) Math.ceil(remainingQ / 2.0);
                 current.setQuantum(current.getQuantum() + quantumIncrease);
+                readyQueue.remove(current);
+                readyQueue.add(current); // move current to end of queue
                 current = selected;
                 // preempt current process
                 currentlyExecuting = null;
@@ -123,6 +123,8 @@ class AG_Scheduling{
             if (current != selected) {
                 int remainingQ = currentQuantum - executed;
                 current.setQuantum(current.getQuantum() + remainingQ);
+                readyQueue.remove(current);
+                readyQueue.add(current); // move current to end of queue
                 current = selected;
                 currentlyExecuting = null;
                 continue;
@@ -143,14 +145,16 @@ class AG_Scheduling{
                     if(p.getRemainingBurstTime() < current.getRemainingBurstTime()) {
                         selected = p;
                     }
-                    else if (p.getRemainingBurstTime() == selected.getRemainingBurstTime() && p.getPriority() < selected.getPriority()) {
-                        selected = p;
-                    }
+//                    else if (p.getRemainingBurstTime() == selected.getRemainingBurstTime() && p.getPriority() < selected.getPriority()) {
+//                        selected = p;
+//                    }
                 }
 
                 // check whether a shorter job has arrived
                 if (current != selected) {
                     current.setQuantum(current.getQuantum() + remainingQ);
+                    readyQueue.remove(current);
+                    readyQueue.add(current); // move current to end of queue
                     preempted = true;
                     current = selected;
                     break;
@@ -166,9 +170,35 @@ class AG_Scheduling{
                     completed++;
                     continue;
                 }
-                else if (remainingQ < 0) {
+                else if (remainingQ <= 0) {
                     // Used full quantum, still has work to do
                     current.setQuantum(current.getQuantum() + 2);
+                    readyQueue.remove(current);
+                    readyQueue.add(current); // move current to end of queue
+                    // Select next process to execute
+                    current = readyQueue.get(0);
+                    for (Process p : readyQueue) {
+                      if (p.getArrivalTime() < current.getArrivalTime()) {
+                            current = p;
+                        }
+                    }
+                    continue;
+
+//                    for (Process p : readyQueue) {
+//                        if (p.getArrivalTime() < current.getArrivalTime()) {
+//                            current = p;
+//                        }
+//                        // In case of tie, select process with higher priority
+//                        else if (p.getArrivalTime() == current.getArrivalTime() && p.getPriority() < current.getPriority()) {
+//                            current = p;
+//                        }
+//
+//                        // In case of tie, select process with shorter remaining burst time
+//                        else if (p.getArrivalTime() == current.getArrivalTime() && p.getPriority() == current.getPriority() && p.getRemainingBurstTime() < current.getRemainingBurstTime()) {
+//                            current = p;
+//                        }
+//
+//                    }
                 }
                 currentlyExecuting = null;
             }
@@ -214,7 +244,7 @@ class AG_Scheduling{
 
         if(processes.size() > completed) {
             for (Process proc : readyQueue) {
-                if (proc.getArrivalTime() <= current.getArrivalTime()) {
+                if (proc.getArrivalTime() < current.getArrivalTime()) {
                     current = proc;
                 }
                 if (proc.getRemainingBurstTime() > 0 && current.getRemainingBurstTime()<= 0) {
@@ -228,23 +258,13 @@ class AG_Scheduling{
         }
     }
 
-    private boolean hasHigherPriority(int priority) {
-        // Lower priority number means higher priority
-        for (Process p : readyQueue) {
-            if (p.getPriority() < priority) {
-                return true;
+    public boolean checkArrival(List<Process> P){
+        for (Process proc : P) {
+            if (proc.getArrivalTime() < current.getArrivalTime() || proc.getArrivalTime() > current.getArrivalTime()) {
+                return false;
             }
         }
-        return false;
-    }
-
-    private boolean hasShorterJob(int remaining) {
-        for (Process p : readyQueue) {
-            if (p.getRemainingBurstTime() < remaining) {
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
 
     public void printResults() {

@@ -4,17 +4,8 @@ import java.util.List;
 public class main {
     public static void main(String[] args) {
         List<Process> processes = new ArrayList<>();
-//        {"name": "P1", "arrival": 0, "burst": 6, "priority": 3},
-//        {"name": "P2", "arrival": 0, "burst": 3, "priority": 1},
-//        {"name": "P3", "arrival": 0, "burst": 8, "priority": 2},
-//        {"name": "P4", "arrival": 0, "burst": 4, "priority": 4},
-//        {"name": "P5", "arrival": 0, "burst": 2, "priority": 5}
         // name, arrival, burst, priority, quantum
 //        processes.add(new Process("p1", 0, 6, 3, 0));
-//        processes.add(new Process("p2", 0, 3, 1, 0));
-//        processes.add(new Process("p3", 0, 8, 2, 0));
-//        processes.add(new Process("p4", 0, 4, 4, 0));
-//        processes.add(new Process("p5", 0, 2, 5, 0));
 //
 //
 //        int contextSwitch = 1;
@@ -26,7 +17,7 @@ public class main {
 //        sjf.execute();
 //        sjf.printResults();
 
-         // run priority scheduler with aging
+        // run priority scheduler with aging
 //         System.out.println("\n--- priority test ---");
 //         PriorityScheduler priority =
 //                 new PriorityScheduler(processes, contextSwitch, agingInterval);
@@ -34,31 +25,6 @@ public class main {
 //         priority.printResults();
 
         // // rr and ag schedulers can be added later
-
-//         name, arrival, burst, priority, quantum
-//        processes.add(new Process("P1", 0, 20, 5, 8));
-//        processes.add(new Process("P2", 3, 4, 3, 6));
-//        processes.add(new Process("P3", 6, 3, 4, 5));
-//        processes.add(new Process("P4", 10, 2, 2, 4));
-//        processes.add(new Process("P5", 15, 5, 6, 7));
-//        processes.add(new Process("P6", 20, 6, 1, 3));
-
-//        {"name": "P1", "arrival": 0, "burst": 8, "priority": 3},
-//        {"name": "P2", "arrival": 1, "burst": 4, "priority": 1},
-//        {"name": "P3", "arrival": 2, "burst": 2, "priority": 4},
-//        {"name": "P4", "arrival": 3, "burst": 1, "priority": 2},
-//        {"name": "P5", "arrival": 4, "burst": 3, "priority": 5}
-
-//        {"name": "P1", "waitingTime": 19, "turnaroundTime": 27},
-//        {"name": "P2", "waitingTime": 14, "turnaroundTime": 18},
-//        {"name": "P3", "waitingTime": 4, "turnaroundTime": 6},
-//        {"name": "P4", "waitingTime": 9, "turnaroundTime": 10},
-//        {"name": "P5", "waitingTime": 17, "turnaroundTime": 20}
-//        processes.add(new Process("P1", 0, 8, 3,0));
-//        processes.add(new Process("P2", 1, 4, 1,0));
-//        processes.add(new Process("P3", 2, 2, 4,0));
-//        processes.add(new Process("P4", 3, 1, 2,0 ));
-//        processes.add(new Process("P5", 4, 3, 5,0 ));
 //
 //
 //        int timeQuantum = 2;
@@ -68,10 +34,40 @@ public class main {
 //        RoundRobin rr = new RoundRobin();
 //        rr.simulateRR(processes, timeQuantum, contextSwitchTime);
 
+//
+//        {"name": "P1", "arrival": 0, "burst": 10, "priority": 3, "quantum": 4},
+//        {"name": "P2", "arrival": 0, "burst": 8, "priority": 1, "quantum": 5},
+//        {"name": "P3", "arrival": 0, "burst": 12, "priority": 2, "quantum": 6},
+//        {"name": "P4", "arrival": 0, "burst": 6, "priority": 4, "quantum": 3},
+//        {"name": "P5", "arrival": 0, "burst": 9, "priority": 5, "quantum": 4}
+// test 2
+//        processes.add(new Process("P1", 0, 10, 3,4));
+//        processes.add(new Process("P2", 0, 8, 1,5));
+//        processes.add(new Process("P3", 0, 12, 2,6));
+//        processes.add(new Process("P4", 0, 6, 4,3));
+//        processes.add(new Process("P5", 0, 9, 5,4));
+
 //        {"name": "P1", "arrival": 0, "burst": 17, "priority": 4, "quantum": 7},
 //        {"name": "P2", "arrival": 2, "burst": 6, "priority": 7, "quantum": 9},
 //        {"name": "P3", "arrival": 5, "burst": 11, "priority": 3, "quantum": 4},
 //        {"name": "P4", "arrival": 15, "burst": 4, "priority": 6, "quantum": 6}
+//test 1
+//        processes.add(new Process("P1", 0, 17, 4,7));
+//        processes.add(new Process("P2", 2, 6, 7,9));
+//        processes.add(new Process("P3", 5, 11, 3,4));
+//        processes.add(new Process("P4", 15, 4, 6,6));
+
+//        {"name": "P1", "arrival": 0, "burst": 3, "priority": 2, "quantum": 10},
+//        {"name": "P2", "arrival": 2, "burst": 4, "priority": 3, "quantum": 12},
+//        {"name": "P3", "arrival": 5, "burst": 2, "priority": 1, "quantum": 8},
+//        {"name": "P4", "arrival": 8, "burst": 5, "priority": 4, "quantum": 15},
+//        {"name": "P5", "arrival": 12, "burst": 3, "priority": 5, "quantum": 9}
+// test 4
+//        processes.add(new Process("P1", 0, 3, 2,10));
+//        processes.add(new Process("P2", 2, 4, 3,12));
+//        processes.add(new Process("P3", 5, 2, 1,8));
+//        processes.add(new Process("P4", 8, 5, 4,15));
+//        processes.add(new Process("P5", 12, 3, 5,9));
 
 //        {"name": "P1", "arrival": 0, "burst": 20, "priority": 5, "quantum": 8},
 //        {"name": "P2", "arrival": 3, "burst": 4, "priority": 3, "quantum": 6},
@@ -79,6 +75,13 @@ public class main {
 //        {"name": "P4", "arrival": 10, "burst": 2, "priority": 2, "quantum": 4},
 //        {"name": "P5", "arrival": 15, "burst": 5, "priority": 6, "quantum": 7},
 //        {"name": "P6", "arrival": 20, "burst": 6, "priority": 1, "quantum": 3}
+//test 3
+//        processes.add(new Process("P1", 0, 20, 5,8));
+//        processes.add(new Process("P2", 3, 4, 3,6));
+//        processes.add(new Process("P3", 6, 3, 4,5));
+//        processes.add(new Process("P4", 10, 2, 2,4));
+//        processes.add(new Process("P5", 15, 5, 6,7));
+//        processes.add(new Process("P6", 20, 6, 1,3));
 
 //        {"name": "P1", "arrival": 0, "burst": 25, "priority": 3, "quantum": 5},
 //        {"name": "P2", "arrival": 1, "burst": 18, "priority": 2, "quantum": 4},
@@ -86,7 +89,15 @@ public class main {
 //        {"name": "P4", "arrival": 5, "burst": 15, "priority": 1, "quantum": 3},
 //        {"name": "P5", "arrival": 8, "burst": 20, "priority": 5, "quantum": 7},
 //        {"name": "P6", "arrival": 12, "burst": 12, "priority": 6, "quantum": 4}
+//test 5
+//        processes.add(new Process("P1", 0, 25, 3,5));
+//        processes.add(new Process("P2", 1, 18, 2,4));
+//        processes.add(new Process("P3", 3, 22, 4,6));
+//        processes.add(new Process("P4", 5, 15, 1,3));
+//        processes.add(new Process("P5", 8, 20, 5,7));
+//        processes.add(new Process("P6", 12, 12, 6,4));
 
+//Test 6
 //        {"name": "P1","arrival":0,"burst":14,"priority":4,"quantum":6},
 //        {"name": "P2","arrival":4,"burst":9,"priority":2,"quantum":8},
 //        {"name": "P3","arrival":7,"burst":16,"priority":5,"quantum":5},
@@ -108,6 +119,6 @@ public class main {
         ag.simulate();
         ag.printResults();
 
-// AG Test 1, 4 working for now
+// AG Test 1, 2 , 4, working for now
     }
 }
