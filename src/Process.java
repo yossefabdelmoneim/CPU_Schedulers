@@ -1,17 +1,20 @@
-//process class
+import java.util.ArrayList;
+import java.util.List;
+
 public class Process {
+
     private String name;
     private int arrivalTime;
     private int burstTime;
     private int remainingBurstTime;
     private int priority;
     private int quantum;
+
     private int waitingTime;
     private int turnaroundTime;
     private int completionTime;
-    private int lastExecutedTime;
-    private int totalReadyQueueTime;
 
+    private List<Integer> quantumHistory;
 
     public Process(String name, int arrivalTime, int burstTime, int priority, int quantum) {
         this.name = name;
@@ -20,13 +23,12 @@ public class Process {
         this.remainingBurstTime = burstTime;
         this.priority = priority;
         this.quantum = quantum;
-        this.waitingTime = 0;
-        this.turnaroundTime = 0;
-        this.completionTime = 0;
-        this.lastExecutedTime = arrivalTime;
-        this.totalReadyQueueTime = 0;
+
+        quantumHistory = new ArrayList<Integer>();
+        quantumHistory.add(quantum);
     }
 
+    // Copy constructor
     public Process(Process other) {
         this.name = other.name;
         this.arrivalTime = other.arrivalTime;
@@ -34,87 +36,76 @@ public class Process {
         this.remainingBurstTime = other.remainingBurstTime;
         this.priority = other.priority;
         this.quantum = other.quantum;
-        this.waitingTime = other.waitingTime;
-        this.turnaroundTime = other.turnaroundTime;
-        this.completionTime = other.completionTime;
-        this.lastExecutedTime = other.lastExecutedTime;
-        this.totalReadyQueueTime = other.totalReadyQueueTime;
+
+        quantumHistory = new ArrayList<Integer>();
+        for (int i = 0; i < other.quantumHistory.size(); i++) {
+            quantumHistory.add(other.quantumHistory.get(i));
+        }
     }
 
-    public String getName() {
-        return this.name;
+    // Getters
+    public String getName() { return name; }
+    public int getArrivalTime() { return arrivalTime; }
+    public int getBurstTime() { return burstTime; }
+    public int getRemainingBurstTime() { return remainingBurstTime; }
+    public int getPriority() { return priority; }
+    public int getQuantum() { return quantum; }
+    public int getWaitingTime() { return waitingTime; }
+    public int getTurnaroundTime() { return turnaroundTime; }
+    public int getCompletionTime() { return completionTime; }
+    public int getTotalReadyQueueTime() {
+        int total = 0;
+        for (int q : quantumHistory) {
+            total += q;
+        }
+        return total;
+    }
+    public List<Integer> getQuantumHistory() { return quantumHistory; }
+
+    // Setters
+    public void setRemainingBurstTime(int t) {
+        remainingBurstTime = t;
     }
 
-    public int getArrivalTime() {
-        return this.arrivalTime;
+    public void setTurnaroundTime(int t) {
+        turnaroundTime = completionTime - arrivalTime;
     }
 
-    public int getBurstTime() {
-        return this.burstTime;
+    public void setWaitingTime(int t) {
+        waitingTime = turnaroundTime - burstTime;
     }
 
-    public int getRemainingBurstTime() {
-        return this.remainingBurstTime;
+    public void setQuantum(int q) {
+        quantum = q;
+        quantumHistory.add(q);
     }
 
-    public int getPriority() {
-        return this.priority;
+    public void setLastExecutedTime(int t) {
+        waitingTime = t;
     }
 
-    public int getQuantum() {
-        return this.quantum;
+    public void setCompletionTime(int t) {
+        completionTime = t;
     }
 
-    public int getWaitingTime() {
-        return this.waitingTime;
+    public void setQuantumHistory(List<Integer> history) {
+        quantumHistory = history;
     }
 
-    public int getTurnaroundTime() {
-        return this.turnaroundTime;
-    }
-
-    public int getCompletionTime() {
-        return this.completionTime;
+    //calculation
+    public void incrementReadyQueueTime(int t) {
+        if (quantumHistory.isEmpty()) return;
+        int lastIndex = quantumHistory.size() - 1;
+        quantumHistory.set(lastIndex, quantumHistory.get(lastIndex) + t);
     }
 
     public int getLastExecutedTime() {
-        return this.lastExecutedTime;
+        if (quantumHistory.isEmpty()) return 0;
+        return burstTime - remainingBurstTime - getTotalReadyQueueTime();
     }
 
-
-
-    public int getTotalReadyQueueTime() {return totalReadyQueueTime;}
-
-    public void setRemainingBurstTime(int remainingBurstTime) {
-        this.remainingBurstTime = remainingBurstTime;
+    public void computeTurnaroundAndWaiting() {
+        turnaroundTime = completionTime - arrivalTime;
+        waitingTime = turnaroundTime - burstTime;
     }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public void setQuantum(int quantum) {
-        this.quantum = quantum;
-    }
-
-    public void setWaitingTime(int waitingTime) {
-        this.waitingTime = waitingTime;
-    }
-
-    public void setTurnaroundTime(int turnaroundTime) {
-        this.turnaroundTime = turnaroundTime;
-    }
-
-    public void setCompletionTime(int completionTime) {
-        this.completionTime = completionTime;
-    }
-
-    public void setLastExecutedTime(int lastExecutedTime) {
-        this.lastExecutedTime = lastExecutedTime;
-    }
-
-    public void incrementReadyQueueTime(int value) {totalReadyQueueTime = totalReadyQueueTime + value;}
-
-    public void resetReadyQueueTime() {totalReadyQueueTime = 0;}
-
 }
