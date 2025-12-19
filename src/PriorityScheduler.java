@@ -41,8 +41,8 @@ public void execute() {
                 int effectivePriority;
 
                 //Only apply aging if wait time is GREATER THAN aging interval
-                if (p.getTotalReadyQueueTime() > agingInterval) {
-                    int agingFactor = p.getTotalReadyQueueTime() / agingInterval;
+                if (p.getReadyQueueTime() > agingInterval) {
+                    int agingFactor = p.getReadyQueueTime() / agingInterval;
                     effectivePriority = p.getPriority() - agingFactor;
                 } else {
                     //No aging yet
@@ -77,12 +77,12 @@ public void execute() {
 
             for (Process p : readyQueue) {
                 if (p != selected) {
-                    p.incrementReadyQueueTime(1);
+                    p.incrementTotalReadyQueueTime(1);
                 }
             }
 
             selected.setRemainingBurstTime(selected.getRemainingBurstTime() - 1);
-            selected.resetReadyQueueTime();
+            selected.resetTotalReadyQueueTime();
             currentTime++;
 
             //completion
@@ -117,7 +117,7 @@ public void execute() {
     private void contextSwitch(List<Process> readyQueue, List<Process> completed, Process currentProcess) {
         for (Process p : readyQueue) {
             if (p != currentProcess) {
-            p.incrementReadyQueueTime(contextSwitching);
+            p.incrementTotalReadyQueueTime(contextSwitching);
             }
         }
         currentTime += contextSwitching;

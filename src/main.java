@@ -6,10 +6,89 @@ public class main {
         List<Process> processes = new ArrayList<>();
         // name, arrival, burst, priority, quantum
 //        processes.add(new Process("p1", 0, 6, 3, 0));
-//
-//
-//        int contextSwitch = 1;
-//        int agingInterval = 5;
+
+
+        //----------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------
+        //SEIF CODE TESTING
+        /* test case 1: basic mixed arrivals */
+        List<Process> tc1 = new ArrayList<>();
+
+        tc1.add(new Process("p1", 0, 8, 3, 0));
+        tc1.add(new Process("p2", 1, 4, 1, 0));
+        tc1.add(new Process("p3", 2, 2, 4, 0));
+        tc1.add(new Process("p4", 3, 1, 2, 0));
+        tc1.add(new Process("p5", 4, 3, 5, 0));
+
+        int contextSwitch1 = 1;
+        int agingInterval1 = 5;
+
+        System.out.println("\n--- priority test case 1 ---");
+        PriorityScheduler priority1 =
+                new PriorityScheduler(tc1, contextSwitch1, agingInterval1);
+        priority1.execute();
+        priority1.printResults();
+
+        /* test case 2: all processes arrive at time 0 */
+        List<Process> tc2 = new ArrayList<>();
+
+        tc2.add(new Process("p1", 0, 6, 3, 0));
+        tc2.add(new Process("p2", 0, 3, 1, 0));
+        tc2.add(new Process("p3", 0, 8, 2, 0));
+        tc2.add(new Process("p4", 0, 4, 4, 0));
+        tc2.add(new Process("p5", 0, 2, 5, 0));
+
+        int contextSwitch2 = 1;
+        int agingInterval2 = 5;
+
+        System.out.println("\n--- priority test case 2 ---");
+        PriorityScheduler priority2 =
+                new PriorityScheduler(tc2, contextSwitch2, agingInterval2);
+        priority2.execute();
+        priority2.printResults();
+
+
+        /* test case 3: varied burst times with starvation risk */
+        List<Process> tc3 = new ArrayList<>();
+
+        tc3.add(new Process("p1", 0, 10, 5, 0));
+        tc3.add(new Process("p2", 2, 5, 1, 0));
+        tc3.add(new Process("p3", 5, 3, 2, 0));
+        tc3.add(new Process("p4", 8, 7, 1, 0));
+        tc3.add(new Process("p5", 10, 2, 3, 0));
+
+        int contextSwitch3 = 1;
+        int agingInterval3 = 4;
+
+        System.out.println("\n--- priority test case 3 ---");
+        PriorityScheduler priority3 =
+                new PriorityScheduler(tc3, contextSwitch3, agingInterval3);
+        priority3.execute();
+        priority3.printResults();
+
+
+        /* test case 4: large bursts with gaps in arrivals */
+        List<Process> tc4 = new ArrayList<>();
+
+        tc4.add(new Process("p1", 0, 12, 2, 0));
+        tc4.add(new Process("p2", 4, 9, 3, 0));
+        tc4.add(new Process("p3", 8, 15, 1, 0));
+        tc4.add(new Process("p4", 12, 6, 4, 0));
+        tc4.add(new Process("p5", 16, 11, 2, 0));
+        tc4.add(new Process("p6", 20, 5, 5, 0));
+
+        int contextSwitch4 = 2;
+        int agingInterval4 = 6;
+
+        System.out.println("\n--- priority test case 4 ---");
+        PriorityScheduler priority4 =
+                new PriorityScheduler(tc4, contextSwitch4, agingInterval4);
+        priority4.execute();
+        priority4.printResults();
+
+        //END OF SEIF TESTING
+        //----------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------
 
         // run sjf scheduler
 //        System.out.println("\n--- sjf test ---");
@@ -17,12 +96,7 @@ public class main {
 //        sjf.execute();
 //        sjf.printResults();
 
-        // run priority scheduler with aging
-//         System.out.println("\n--- priority test ---");
-//         PriorityScheduler priority =
-//                 new PriorityScheduler(processes, contextSwitch, agingInterval);
-//         priority.execute();
-//         priority.printResults();
+
 
         // // rr and ag schedulers can be added later
 //
@@ -105,19 +179,19 @@ public class main {
 //        {"name": "P5","arrival":15,"burst":11,"priority":3,"quantum":4},
 //        {"name": "P6","arrival":20,"burst":5,"priority":6,"quantum":7},
 //        {"name": "P7","arrival":25,"burst":8,"priority":7,"quantum":9}
-        processes.add(new Process("P1", 0, 14, 4,6));
-        processes.add(new Process("P2", 4, 9, 2,8));
-        processes.add(new Process("P3", 7, 16, 5,5));
-        processes.add(new Process("P4", 10, 7, 1,10));
-        processes.add(new Process("P5", 15, 11, 3,4));
-        processes.add(new Process("P6", 20, 5, 6,7));
-        processes.add(new Process("P7", 25, 8, 7,9));
-
-        // run AG scheduler
-        System.out.println("\n--- AG test ---");
-        AG_Scheduling ag = new AG_Scheduling(processes);
-        ag.simulate();
-        ag.printResults();
+//        processes.add(new Process("P1", 0, 14, 4,6));
+//        processes.add(new Process("P2", 4, 9, 2,8));
+//        processes.add(new Process("P3", 7, 16, 5,5));
+//        processes.add(new Process("P4", 10, 7, 1,10));
+//        processes.add(new Process("P5", 15, 11, 3,4));
+//        processes.add(new Process("P6", 20, 5, 6,7));
+//        processes.add(new Process("P7", 25, 8, 7,9));
+//
+//        // run AG scheduler
+//        System.out.println("\n--- AG test ---");
+//        AG_Scheduling ag = new AG_Scheduling(processes);
+//        ag.simulate();
+//        ag.printResults();
 
 // AG Test 1, 2 , 4, working for now
     }
