@@ -12,24 +12,24 @@ public class main {
         //----------------------------------------------------------------------------------------
         //SEIF CODE TESTING
         /* test case 1: basic mixed arrivals */
-        List<Process> tc1 = new ArrayList<>();
-
-        tc1.add(new Process("p1", 0, 8, 3, 0));
-        tc1.add(new Process("p2", 1, 4, 1, 0));
-        tc1.add(new Process("p3", 2, 2, 4, 0));
-        tc1.add(new Process("p4", 3, 1, 2, 0));
-        tc1.add(new Process("p5", 4, 3, 5, 0));
-
-        int contextSwitch1 = 1;
-        int agingInterval1 = 5;
-
-        System.out.println("\n--- priority test case 1 ---");
-        PriorityScheduler priority1 =
-                new PriorityScheduler(tc1, contextSwitch1, agingInterval1);
-        priority1.execute();
-        priority1.printResults();
-
-        /* test case 2: all processes arrive at time 0 */
+//        List<Process> tc1 = new ArrayList<>();
+//
+//        tc1.add(new Process("p1", 0, 8, 3, 0));
+//        tc1.add(new Process("p2", 1, 4, 1, 0));
+//        tc1.add(new Process("p3", 2, 2, 4, 0));
+//        tc1.add(new Process("p4", 3, 1, 2, 0));
+//        tc1.add(new Process("p5", 4, 3, 5, 0));
+//
+//        int contextSwitch1 = 1;
+//        int agingInterval1 = 5;
+//
+//        System.out.println("\n--- priority test case 1 ---");
+//        PriorityScheduler priority1 =
+//                new PriorityScheduler(tc1, contextSwitch1, agingInterval1);
+//        priority1.execute();
+//        priority1.printResults();
+//
+//        /* test case 2: all processes arrive at time 0 */
         List<Process> tc2 = new ArrayList<>();
 
         tc2.add(new Process("p1", 0, 6, 3, 0));
@@ -48,7 +48,7 @@ public class main {
         priority2.printResults();
 
 
-        /* test case 3: varied burst times with starvation risk */
+//        /* test case 3: varied burst times with starvation risk */
         List<Process> tc3 = new ArrayList<>();
 
         tc3.add(new Process("p1", 0, 10, 5, 0));
@@ -85,6 +85,44 @@ public class main {
                 new PriorityScheduler(tc4, contextSwitch4, agingInterval4);
         priority4.execute();
         priority4.printResults();
+
+
+        /* Test Case 5: Short bursts with high frequency */
+        List<Process> tc5 = new ArrayList<>();
+
+        tc5.add(new Process("p1", 0, 3, 3, 0));
+        tc5.add(new Process("p2", 1, 2, 1, 0));
+        tc5.add(new Process("p3", 2, 4, 2, 0));
+        tc5.add(new Process("p4", 3, 1, 4, 0));
+        tc5.add(new Process("p5", 4, 3, 5, 0));
+
+        int contextSwitch5 = 1;
+        int agingInterval5 = 3;
+
+        System.out.println("\n--- priority test case 5 ---");
+        PriorityScheduler priority5 =
+                new PriorityScheduler(tc5, contextSwitch5, agingInterval5);
+        priority5.execute();
+        priority5.printResults();
+
+        /* Test Case 6: Mixed scenario - comprehensive test*/
+        List<Process> tc6 = new ArrayList<>();
+
+        tc6.add(new Process("p1", 0, 14, 4, 0));
+        tc6.add(new Process("p2", 3, 7, 2, 0));
+        tc6.add(new Process("p3", 6, 10, 5, 0));
+        tc6.add(new Process("p4", 9, 5, 1, 0));
+        tc6.add(new Process("p5", 12, 8, 3, 0));
+        tc6.add(new Process("p6", 15, 4, 6, 0));
+
+        int contextSwitch6 = 1;
+        int agingInterval6 = 5;
+
+        System.out.println("\n--- priority test case 6 ---");
+        PriorityScheduler priority6 =
+                new PriorityScheduler(tc6, contextSwitch6, agingInterval6);
+        priority6.execute();
+        priority6.printResults();
 
         //END OF SEIF TESTING
         //----------------------------------------------------------------------------------------
@@ -179,19 +217,19 @@ public class main {
 //        {"name": "P6","arrival":20,"burst":5,"priority":6,"quantum":7},
 //        {"name": "P7","arrival":25,"burst":8,"priority":7,"quantum":9}
 
-        processes.add(new Process("P1", 0, 14, 4,6));
-        processes.add(new Process("P2", 4, 9, 2,8));
-        processes.add(new Process("P3", 7, 16, 5,5));
-        processes.add(new Process("P4", 10, 7, 1,10));
-        processes.add(new Process("P5", 15, 11, 3,4));
-        processes.add(new Process("P6", 20, 5, 6,7));
-        processes.add(new Process("P7", 25, 8, 7,9));
-//
-//        // run AG scheduler
-        System.out.println("\n--- AG test ---");
-        AG_Scheduling ag = new AG_Scheduling(processes);
-        ag.simulate();
-        ag.printResults();
+//        processes.add(new Process("P1", 0, 14, 4,6));
+//        processes.add(new Process("P2", 4, 9, 2,8));
+//        processes.add(new Process("P3", 7, 16, 5,5));
+//        processes.add(new Process("P4", 10, 7, 1,10));
+//        processes.add(new Process("P5", 15, 11, 3,4));
+//        processes.add(new Process("P6", 20, 5, 6,7));
+//        processes.add(new Process("P7", 25, 8, 7,9));
+////
+////        // run AG scheduler
+//        System.out.println("\n--- AG test ---");
+//        AG_Scheduling ag = new AG_Scheduling(processes);
+//        ag.simulate();
+//        ag.printResults();
 
 // AG Test 1, 2 , 4, working for now
     }

@@ -8,6 +8,8 @@ public class PriorityScheduler {
     private int agingInterval;
     private List<String> executionOrder;
     private int currentTime;
+    Process nextSelected = null;
+
 
     public PriorityScheduler(List<Process> processes, int contextSwitching, int agingInterval) {
 
@@ -21,12 +23,15 @@ public class PriorityScheduler {
         this.currentTime = 0;
     }
 
+
 public void execute() {
     List<Process> readyQueue = new ArrayList<>();
     List<Process> completed = new ArrayList<>();
     Process currentProcess = null;
 
+
     while (completed.size() < processes.size()) {
+
 
         //add arriving processes at current time
         addArrivingProcesses(readyQueue, completed, currentTime);
@@ -34,42 +39,24 @@ public void execute() {
         //select highest priority process
         if (!readyQueue.isEmpty()) {
 
-            Process selected = null;
-            int bestEffectivePriority = Integer.MAX_VALUE;
-
-            for (Process p : readyQueue) {
-                int effectivePriority;
-
-                //Only apply aging if wait time is GREATER THAN aging interval
-                if (p.getReadyQueueTime() > agingInterval) {
-                    int agingFactor = p.getReadyQueueTime() / agingInterval;
-                    effectivePriority = p.getPriority() - agingFactor;
-                } else {
-                    //No aging yet
-                    effectivePriority = p.getPriority();
-                }
-
-                if (selected == null || effectivePriority < bestEffectivePriority || (effectivePriority == bestEffectivePriority && p.getArrivalTime() < selected.getArrivalTime())) {
-                    selected = p;
-                    bestEffectivePriority = effectivePriority;
+            Process selected = getHighestPriority(readyQueue);
+            if(nextSelected != null) {
+                if (nextSelected != selected) {
+                    contextSwitch(readyQueue, completed, currentProcess);
                 }
             }
+            nextSelected = null;
 
-            //regular aging
-//            for (Process p : readyQueue) {
-//                int agingFactor = p.getTotalReadyQueueTime() / agingInterval;
-//                int effectivePriority = p.getPriority() - agingFactor;
-//
-//                if (selected == null || effectivePriority < bestEffectivePriority || (effectivePriority == bestEffectivePriority && p.getArrivalTime() < selected.getArrivalTime())) {
-//                    selected = p;
-//                    bestEffectivePriority = effectivePriority;
-//                }
-//            }
 
             //context switching
             if (currentProcess != null && currentProcess != selected) {
                 contextSwitch(readyQueue, completed, currentProcess);
+
+                //RECHECK again after context switching and incrementing current time by context switch time
+                selected = getHighestPriority(readyQueue);
+
             }
+
 
             //execute for 1 time unit
             currentProcess = selected;
@@ -82,7 +69,6 @@ public void execute() {
             }
 
             selected.setRemainingBurstTime(selected.getRemainingBurstTime() - 1);
-            selected.resetTotalReadyQueueTime();
             currentTime++;
 
             //completion
@@ -91,10 +77,11 @@ public void execute() {
                 selected.setTurnaroundTime(currentTime - selected.getArrivalTime());
                 selected.setWaitingTime(selected.getTurnaroundTime() - selected.getBurstTime());
 
-                contextSwitch(readyQueue, completed, currentProcess);
-
                 completed.add(selected);
                 readyQueue.remove(selected);
+                nextSelected = getHighestPriority(readyQueue);
+                contextSwitch(readyQueue, completed, currentProcess);
+
                 currentProcess = null;
             }
 
@@ -103,7 +90,6 @@ public void execute() {
         }
     }
 }
-
 
     //helper method to add arriving processes
     private void addArrivingProcesses(List<Process> readyQueue, List<Process> completed, int time) {
@@ -116,14 +102,47 @@ public void execute() {
 
     private void contextSwitch(List<Process> readyQueue, List<Process> completed, Process currentProcess) {
         for (Process p : readyQueue) {
-            if (p != currentProcess) {
+
             p.incrementTotalReadyQueueTime(contextSwitching);
-            }
+
         }
         currentTime += contextSwitching;
-
         //check for arrivals during/after context switch
         addArrivingProcesses(readyQueue, completed, currentTime);
+    }
+
+
+    public Process getHighestPriority(List<Process> readyQueue) {
+        Process selected = null;
+        int bestEffectivePriority = Integer.MAX_VALUE;
+        for (Process p : readyQueue) {
+
+            int agingFactor = p.getReadyQueueTime() / agingInterval;
+            int effectivePriority = p.getPriority() - agingFactor;
+            if (effectivePriority < 1){
+                effectivePriority = 1;
+            }
+
+
+            if (selected == null) {
+                selected = p;
+                bestEffectivePriority = effectivePriority;
+            } else if (effectivePriority < bestEffectivePriority) {
+                selected = p;
+                bestEffectivePriority = effectivePriority;
+            } else if (effectivePriority == bestEffectivePriority) {
+                // Tie in effective priority
+                if (p.getArrivalTime() < selected.getArrivalTime()) {
+                    selected = p;
+                } else if (p.getArrivalTime() == selected.getArrivalTime()) {
+                    //tie in arrival time, compare names
+                    if (p.getName().compareTo(selected.getName()) < 0) {
+                        selected = p;
+                    }
+                }
+            }
+        }
+        return selected;
     }
 
     public void printResults() {
