@@ -32,7 +32,7 @@ class AG_Scheduling{
 
         // Add initially arrived processes
         checkArrivals();
-        //
+
         current = readyQueue.getFirst();
 
         for (Process p : readyQueue) {
@@ -110,11 +110,9 @@ class AG_Scheduling{
             }
 
 
+            selected = current;
             for(Process p : readyQueue) {
-                if(p.getRemainingBurstTime() < current.getRemainingBurstTime()) {
-                    selected = p;
-                }
-                else if (p.getRemainingBurstTime() == selected.getRemainingBurstTime() && p.getPriority() < selected.getPriority()) {
+                if(p.getRemainingBurstTime() < selected.getRemainingBurstTime()) {
                     selected = p;
                 }
             }
@@ -145,9 +143,6 @@ class AG_Scheduling{
                     if(p.getRemainingBurstTime() < current.getRemainingBurstTime()) {
                         selected = p;
                     }
-//                    else if (p.getRemainingBurstTime() == selected.getRemainingBurstTime() && p.getPriority() < selected.getPriority()) {
-//                        selected = p;
-//                    }
                 }
 
                 // check whether a shorter job has arrived
@@ -165,7 +160,7 @@ class AG_Scheduling{
 
             // Handle process completion or quantum exhaustion
             if(!preempted) {
-                if (current.getRemainingBurstTime() < 0) {
+                if (current.getRemainingBurstTime() <= 0) {
                     finish(current);
                     completed++;
                     continue;
@@ -176,29 +171,8 @@ class AG_Scheduling{
                     readyQueue.remove(current);
                     readyQueue.add(current); // move current to end of queue
                     // Select next process to execute
-                    current = readyQueue.get(0);
-                    for (Process p : readyQueue) {
-                      if (p.getArrivalTime() < current.getArrivalTime()) {
-                            current = p;
-                        }
-                    }
+                    current = readyQueue.getFirst();
                     continue;
-
-//                    for (Process p : readyQueue) {
-//                        if (p.getArrivalTime() < current.getArrivalTime()) {
-//                            current = p;
-//                        }
-//                        // In case of tie, select process with higher priority
-//                        else if (p.getArrivalTime() == current.getArrivalTime() && p.getPriority() < current.getPriority()) {
-//                            current = p;
-//                        }
-//
-//                        // In case of tie, select process with shorter remaining burst time
-//                        else if (p.getArrivalTime() == current.getArrivalTime() && p.getPriority() == current.getPriority() && p.getRemainingBurstTime() < current.getRemainingBurstTime()) {
-//                            current = p;
-//                        }
-//
-//                    }
                 }
                 currentlyExecuting = null;
             }
@@ -242,29 +216,8 @@ class AG_Scheduling{
         p.setQuantum(0); // Set quantum to 0 when process completes
         readyQueue.remove(p);
 
-        if(processes.size() > completed) {
-            for (Process proc : readyQueue) {
-                if (proc.getArrivalTime() < current.getArrivalTime()) {
-                    current = proc;
-                }
-                if (proc.getRemainingBurstTime() > 0 && current.getRemainingBurstTime()<= 0) {
-                    current = proc;
-                }
-            }
-        }
-        else{
-            current = null;
-            currentlyExecuting = null;
-        }
-    }
+        current = readyQueue.isEmpty() ? null : readyQueue.getFirst();
 
-    public boolean checkArrival(List<Process> P){
-        for (Process proc : P) {
-            if (proc.getArrivalTime() < current.getArrivalTime() || proc.getArrivalTime() > current.getArrivalTime()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public void printResults() {
