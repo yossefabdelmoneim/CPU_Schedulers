@@ -168,6 +168,14 @@ public void execute() {
         return selected;
     }
 
+    public List<String> getExecutionOrder() {
+        return executionOrder;
+    }
+    
+    public List<Process> getProcesses() {
+        return processes;
+    }
+
     public void printResults() {
 
         System.out.println("\n=== Preemptive Priority Scheduling ===");

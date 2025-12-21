@@ -112,4 +112,8 @@ public class SJFScheduler {
     public List<Process> getProcesses() {
         return this.processes;
     }
+
+    public List<String> getExecutionOrder() {
+        return this.executionOrder;
+    }
 }

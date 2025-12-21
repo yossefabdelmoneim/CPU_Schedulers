@@ -33,7 +33,7 @@ class AG_Scheduling{
         // Add initially arrived processes
         checkArrivals();
 
-        current = readyQueue.getFirst();
+        current = readyQueue.get(0);
 
         for (Process p : readyQueue) {
             if (p.getArrivalTime() < current.getArrivalTime()) {
@@ -171,7 +171,7 @@ class AG_Scheduling{
                     readyQueue.remove(current);
                     readyQueue.add(current); // move current to end of queue
                     // Select next process to execute
-                    current = readyQueue.getFirst();
+                    current = readyQueue.get(0);
                     continue;
                 }
                 currentlyExecuting = null;
@@ -198,7 +198,7 @@ class AG_Scheduling{
     private void execute(Process p, int time) {
         // Add to execution order once per continuous execution
         if (executionOrder.isEmpty() ||
-                !executionOrder.getLast().equals(p.getName())) {
+                !executionOrder.get(executionOrder.size() - 1).equals(p.getName())) {
             executionOrder.add(p.getName());
         }
 
@@ -216,7 +216,7 @@ class AG_Scheduling{
         p.setQuantum(0); // Set quantum to 0 when process completes
         readyQueue.remove(p);
 
-        current = readyQueue.isEmpty() ? null : readyQueue.getFirst();
+        current = readyQueue.isEmpty() ? null : readyQueue.get(0);
 
     }
 

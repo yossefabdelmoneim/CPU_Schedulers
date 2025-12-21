@@ -2,9 +2,25 @@ import java.util.*;
 
 public class RoundRobin {
 
-    public static void simulateRR(List<Process> processes,
+    public static class RRResult {
+        public List<Process> processes;
+        public List<String> executionOrder;
+
+        public RRResult(List<Process> processes, List<String> executionOrder) {
+            this.processes = processes;
+            this.executionOrder = executionOrder;
+        }
+    }
+
+    public static RRResult simulateRR(List<Process> processes,
                                   int timeQuantum,
                                   int contextSwitchTime) {
+
+        // Create copies of processes to avoid modifying originals
+        List<Process> processCopies = new ArrayList<>();
+        for (Process p : processes) {
+            processCopies.add(new Process(p));
+        }
 
         Queue<Process> readyQueue = new LinkedList<>();
         List<Process> finished = new ArrayList<>();
@@ -12,16 +28,15 @@ public class RoundRobin {
 
         int currentTime = 0;
         int index = 0;
-        Process previous = null;
 
         // sort processes by arrival time
-        processes.sort(Comparator.comparingInt(Process::getArrivalTime));
+        processCopies.sort(Comparator.comparingInt(Process::getArrivalTime));
 
-        while (finished.size() < processes.size()) {
+        while (finished.size() < processCopies.size()) {
 
             // add newly arrived processes before execution
-            while (index < processes.size() && processes.get(index).getArrivalTime() <= currentTime) {
-                readyQueue.add(processes.get(index));
+            while (index < processCopies.size() && processCopies.get(index).getArrivalTime() <= currentTime) {
+                readyQueue.add(processCopies.get(index));
                 index++;
             }
 
@@ -42,15 +57,15 @@ public class RoundRobin {
 
             // record execution order
             executionOrder.add(current.getName());
-            System.out.println("Time " + currentTime + " -> " + (currentTime + execTime) + " : " + current.getName());
+            // System.out.println("Time " + currentTime + " -> " + (currentTime + execTime) + " : " + current.getName());
 
             currentTime += execTime;
             current.setRemainingBurstTime(current.getRemainingBurstTime() - execTime);
             current.setLastExecutedTime(currentTime);
 
             // add newly arrived processes during this execution
-            while (index < processes.size() && processes.get(index).getArrivalTime() <= currentTime) {
-                readyQueue.add(processes.get(index));
+            while (index < processCopies.size() && processCopies.get(index).getArrivalTime() <= currentTime) {
+                readyQueue.add(processCopies.get(index));
                 index++;
             }
 
@@ -69,17 +84,16 @@ public class RoundRobin {
             if (!readyQueue.isEmpty()) {
                 currentTime += contextSwitchTime;
             }
-
-            previous = current;
         }
 
         printResults(finished, executionOrder);
+        return new RRResult(finished, executionOrder);
     }
 
     private static void printResults(List<Process> processes, List<String> executionOrder) {
 
-        System.out.println("Execution Order: " + executionOrder);
-        System.out.println("Process | Waiting Time | Turnaround Time");
+        // System.out.println("Execution Order: " + executionOrder);
+        // System.out.println("Process | Waiting Time | Turnaround Time");
 
         // List to track printed processes
         List<String> printed = new ArrayList<>();
@@ -96,12 +110,12 @@ public class RoundRobin {
                 }
 
                 if (p != null) {
-                    System.out.printf(
-                            "%7s |      %2d      |       %2d\n",
-                            p.getName(),
-                            p.getWaitingTime(),
-                            p.getTurnaroundTime()
-                    );
+                    // System.out.printf(
+                    //         "%7s |      %2d      |       %2d\n",
+                    //         p.getName(),
+                    //         p.getWaitingTime(),
+                    //         p.getTurnaroundTime()
+                    // );
                     printed.add(name);  // mark as printed
                 }
             }
