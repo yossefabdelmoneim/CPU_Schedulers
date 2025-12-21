@@ -12,40 +12,40 @@ public class main {
         //----------------------------------------------------------------------------------------
         //SEIF CODE TESTING
         /* test case 1: basic mixed arrivals */
-        List<Process> tc1 = new ArrayList<>();
-
-        tc1.add(new Process("p1", 0, 8, 3, 0));
-        tc1.add(new Process("p2", 1, 4, 1, 0));
-        tc1.add(new Process("p3", 2, 2, 4, 0));
-        tc1.add(new Process("p4", 3, 1, 2, 0));
-        tc1.add(new Process("p5", 4, 3, 5, 0));
-
-        int contextSwitch1 = 1;
-        int agingInterval1 = 5;
-
-        System.out.println("\n--- priority test case 1 ---");
-        PriorityScheduler priority1 =
-                new PriorityScheduler(tc1, contextSwitch1, agingInterval1);
-        priority1.execute();
-        priority1.printResults();
+//        List<Process> tc1 = new ArrayList<>();
 //
-//        /* test case 2: all processes arrive at time 0 */
-        List<Process> tc2 = new ArrayList<>();
-
-        tc2.add(new Process("p1", 0, 6, 3, 0));
-        tc2.add(new Process("p2", 0, 3, 1, 0));
-        tc2.add(new Process("p3", 0, 8, 2, 0));
-        tc2.add(new Process("p4", 0, 4, 4, 0));
-        tc2.add(new Process("p5", 0, 2, 5, 0));
-
-        int contextSwitch2 = 1;
-        int agingInterval2 = 5;
-
-        System.out.println("\n--- priority test case 2 ---");
-        PriorityScheduler priority2 =
-                new PriorityScheduler(tc2, contextSwitch2, agingInterval2);
-        priority2.execute();
-        priority2.printResults();
+//        tc1.add(new Process("p1", 0, 8, 3, 0));
+//        tc1.add(new Process("p2", 1, 4, 1, 0));
+//        tc1.add(new Process("p3", 2, 2, 4, 0));
+//        tc1.add(new Process("p4", 3, 1, 2, 0));
+//        tc1.add(new Process("p5", 4, 3, 5, 0));
+//
+//        int contextSwitch1 = 1;
+//        int agingInterval1 = 5;
+//
+//        System.out.println("\n--- priority test case 1 ---");
+//        PriorityScheduler priority1 =
+//                new PriorityScheduler(tc1, contextSwitch1, agingInterval1);
+//        priority1.execute();
+//        priority1.printResults();
+////
+////        /* test case 2: all processes arrive at time 0 */
+//        List<Process> tc2 = new ArrayList<>();
+//
+//        tc2.add(new Process("p1", 0, 6, 3, 0));
+//        tc2.add(new Process("p2", 0, 3, 1, 0));
+//        tc2.add(new Process("p3", 0, 8, 2, 0));
+//        tc2.add(new Process("p4", 0, 4, 4, 0));
+//        tc2.add(new Process("p5", 0, 2, 5, 0));
+//
+//        int contextSwitch2 = 1;
+//        int agingInterval2 = 5;
+//
+//        System.out.println("\n--- priority test case 2 ---");
+//        PriorityScheduler priority2 =
+//                new PriorityScheduler(tc2, contextSwitch2, agingInterval2);
+//        priority2.execute();
+//        priority2.printResults();
 
 
 //        /* test case 3: varied burst times with starvation risk */

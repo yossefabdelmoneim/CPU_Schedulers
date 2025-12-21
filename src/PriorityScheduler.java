@@ -101,6 +101,7 @@ public void execute() {
 
                 completed.add(selected);
                 readyQueue.remove(selected);
+                addArrivingProcesses(readyQueue, completed, currentTime);
                 nextSelected = getHighestPriority(readyQueue);
                 contextSwitch(readyQueue, completed, currentProcess);
 
