@@ -24,52 +24,78 @@ public class SJFScheduler {
         String lastProcessName = null;
 
         while(completed.size() < this.processes.size()) {
-//            for(Process p : this.processes) {
-//                if (p.getArrivalTime() == this.currentTime && p.getRemainingBurstTime() > 0) {
-//                    readyQueue.add(p);
-//                }
-//            }
+
             addArrivingProcesses(readyQueue, completed, currentTime);
 
             if (!readyQueue.isEmpty()) {
-                Process shortestJob = (Process)readyQueue.get(0);
+
+                Process shortestJob = readyQueue.get(0);
 
                 for(Process p : readyQueue) {
                     if (p.getRemainingBurstTime() < shortestJob.getRemainingBurstTime()) {
                         shortestJob = p;
-                    } else if (p.getRemainingBurstTime() == shortestJob.getRemainingBurstTime() && p.getPriority() < shortestJob.getPriority()) {
+                    } else if (p.getRemainingBurstTime() == shortestJob.getRemainingBurstTime()
+                            && p.getPriority() < shortestJob.getPriority()) {
                         shortestJob = p;
                     }
                 }
 
-                if (currentProcess != shortestJob && lastProcessName != null) {
-                    //context switching
-                        currentTime += contextSwitching;
-                        //check for arrivals during/after context switch
-                        addArrivingProcesses(readyQueue, completed, currentTime);
 
+
+                boolean shouldSwitch = false;
+
+                if (currentProcess == null) {
+
+                    shouldSwitch = true;
+                } else if (currentProcess != shortestJob) {
+
+                    if (shortestJob.getRemainingBurstTime() < currentProcess.getRemainingBurstTime()) {
+                        shouldSwitch = true;
+                    }
                 }
 
-                currentProcess = shortestJob;
-                this.executionOrder.add(shortestJob.getName());
-                shortestJob.setRemainingBurstTime(shortestJob.getRemainingBurstTime() - 1);
+
+                if (shouldSwitch && lastProcessName != null &&
+                        (currentProcess == null || currentProcess != shortestJob)) {
+
+
+                    Process targetProcess = shortestJob;
+
+                    currentTime += contextSwitching;
+                    addArrivingProcesses(readyQueue, completed, currentTime);
+
+
+                    shortestJob = targetProcess;
+                }
+
+
+                if (currentProcess == null || shouldSwitch) {
+                    currentProcess = shortestJob;
+                }
+
+
+                this.executionOrder.add(currentProcess.getName());
+                currentProcess.setRemainingBurstTime(currentProcess.getRemainingBurstTime() - 1);
                 ++this.currentTime;
-                lastProcessName = shortestJob.getName();
-                if (shortestJob.getRemainingBurstTime() == 0) {
-                    shortestJob.setCompletionTime(this.currentTime);
-                    shortestJob.setTurnaroundTime(this.currentTime - shortestJob.getArrivalTime());
-                    shortestJob.setWaitingTime(shortestJob.getTurnaroundTime() - shortestJob.getBurstTime());
-                    completed.add(shortestJob);
-                    readyQueue.remove(shortestJob);
+                lastProcessName = currentProcess.getName();
+
+
+                if (currentProcess.getRemainingBurstTime() == 0) {
+                    currentProcess.setCompletionTime(this.currentTime);
+                    currentProcess.setTurnaroundTime(this.currentTime - currentProcess.getArrivalTime());
+                    currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
+                    completed.add(currentProcess);
+                    readyQueue.remove(currentProcess);
                     currentProcess = null;
                 }
             } else {
+
                 ++this.currentTime;
             }
         }
-
     }
-    //helper method to add arriving processes
+
+
     private void addArrivingProcesses(List<Process> readyQueue, List<Process> completed, int time) {
         for (Process p : processes) {
             if (p.getArrivalTime() <= time && !readyQueue.contains(p) && !completed.contains(p)) {
@@ -79,8 +105,7 @@ public class SJFScheduler {
     }
 
     public void printResults() {
-
-        System.out.println("\n=== SJF  Scheduling ===");
+        System.out.println("\n=== SJF Scheduling ===");
         System.out.print("Execution Order: ");
 
         String last = "";
