@@ -175,11 +175,8 @@ public class TestRunner {
     
     private boolean compareExecutionOrder(List<String> actual, List<String> expected, 
                                          StringBuilder details, String scheduler) {
-        // Remove consecutive duplicates from actual execution order
-        // (since schedulers record every time unit, but expected shows only transitions)
         List<String> filteredActual = removeConsecutiveDuplicates(actual);
         
-        // Always print expected and actual values
         details.append(String.format("  %s Execution Order:\n", scheduler));
         details.append(String.format("    Expected: %s\n", expected));
         details.append(String.format("    Actual:   %s\n", filteredActual));
@@ -408,13 +405,14 @@ public class TestRunner {
             output.processResults.add(pr);
         }
         
-        // Extract averages
+        // Extract average waiting time
         Pattern avgWTPattern = Pattern.compile("\"averageWaitingTime\"\\s*:\\s*([\\d.]+)");
         Matcher avgWTMatcher = avgWTPattern.matcher(schedulerBlock);
         if (avgWTMatcher.find()) {
             output.averageWaitingTime = Double.parseDouble(avgWTMatcher.group(1));
         }
         
+        // Extract average turnaround time
         Pattern avgTATPattern = Pattern.compile("\"averageTurnaroundTime\"\\s*:\\s*([\\d.]+)");
         Matcher avgTATMatcher = avgTATPattern.matcher(schedulerBlock);
         if (avgTATMatcher.find()) {
@@ -425,7 +423,7 @@ public class TestRunner {
     }
     
     private String extractSchedulerBlock(String json, String schedulerName) {
-        // Find the scheduler block by looking for "SJF": { ... }
+        // Find the scheduler block
         Pattern blockPattern = Pattern.compile("\"" + schedulerName + "\"\\s*:\\s*\\{");
         Matcher blockMatcher = blockPattern.matcher(json);
         if (!blockMatcher.find()) {
@@ -534,7 +532,7 @@ public class TestRunner {
         // Compare execution order
         boolean orderMatch = compareExecutionOrder(actualOrder, expected.executionOrder, details, "AG");
         
-        // Compare process results (including quantumHistory)
+        // Compare process results
         boolean processMatch = compareAGProcessResults(actualProcesses, expected.processResults, details, "AG");
         
         // Compare averages
