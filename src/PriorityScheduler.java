@@ -42,7 +42,16 @@ public void execute() {
             Process selected = getHighestPriority(readyQueue);
             if(nextSelected != null) {
                 if (nextSelected != selected) {
-                    contextSwitch(readyQueue, completed, currentProcess);
+                    executionOrder.add(nextSelected.getName());
+                    for (Process p : readyQueue) {
+                        if(p!=nextSelected) {
+                            p.incrementTotalReadyQueueTime(contextSwitching);
+                        }
+
+                    }
+                    currentTime += contextSwitching;
+                    //check for arrivals during/after context switch
+                    addArrivingProcesses(readyQueue, completed, currentTime);
                 }
             }
             nextSelected = null;
@@ -50,10 +59,23 @@ public void execute() {
 
             //context switching
             if (currentProcess != null && currentProcess != selected) {
+                Process oldSelected = selected;
                 contextSwitch(readyQueue, completed, currentProcess);
 
                 //RECHECK again after context switching and incrementing current time by context switch time
                 selected = getHighestPriority(readyQueue);
+                if (selected != oldSelected) {
+                    executionOrder.add(oldSelected.getName());
+                    for (Process p : readyQueue) {
+                        if(p!=oldSelected) {
+                        p.incrementTotalReadyQueueTime(contextSwitching);
+                        }
+
+                    }
+                    currentTime += contextSwitching;
+                    //check for arrivals during/after context switch
+                    addArrivingProcesses(readyQueue, completed, currentTime);
+                }
 
             }
 

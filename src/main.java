@@ -12,22 +12,22 @@ public class main {
         //----------------------------------------------------------------------------------------
         //SEIF CODE TESTING
         /* test case 1: basic mixed arrivals */
-//        List<Process> tc1 = new ArrayList<>();
-//
-//        tc1.add(new Process("p1", 0, 8, 3, 0));
-//        tc1.add(new Process("p2", 1, 4, 1, 0));
-//        tc1.add(new Process("p3", 2, 2, 4, 0));
-//        tc1.add(new Process("p4", 3, 1, 2, 0));
-//        tc1.add(new Process("p5", 4, 3, 5, 0));
-//
-//        int contextSwitch1 = 1;
-//        int agingInterval1 = 5;
-//
-//        System.out.println("\n--- priority test case 1 ---");
-//        PriorityScheduler priority1 =
-//                new PriorityScheduler(tc1, contextSwitch1, agingInterval1);
-//        priority1.execute();
-//        priority1.printResults();
+        List<Process> tc1 = new ArrayList<>();
+
+        tc1.add(new Process("p1", 0, 8, 3, 0));
+        tc1.add(new Process("p2", 1, 4, 1, 0));
+        tc1.add(new Process("p3", 2, 2, 4, 0));
+        tc1.add(new Process("p4", 3, 1, 2, 0));
+        tc1.add(new Process("p5", 4, 3, 5, 0));
+
+        int contextSwitch1 = 1;
+        int agingInterval1 = 5;
+
+        System.out.println("\n--- priority test case 1 ---");
+        PriorityScheduler priority1 =
+                new PriorityScheduler(tc1, contextSwitch1, agingInterval1);
+        priority1.execute();
+        priority1.printResults();
 //
 //        /* test case 2: all processes arrive at time 0 */
         List<Process> tc2 = new ArrayList<>();
