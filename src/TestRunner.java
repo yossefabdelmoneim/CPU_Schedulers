@@ -31,31 +31,31 @@ public class TestRunner {
         int totalTests = 0;
         int passedTests = 0;
         
-        System.out.println("=".repeat(80));
+        System.out.println("=".repeat(20));
         System.out.println("Running CPU Scheduler Tests");
-        System.out.println("=".repeat(80));
+        System.out.println("=".repeat(20));
         
         for (File testFile : testFiles) {
-            System.out.println("\n" + "=".repeat(80));
+            System.out.println("\n" + "=".repeat(20));
             System.out.println("Testing: " + testFile.getName());
-            System.out.println("=".repeat(80));
+            System.out.println("=".repeat(20));
             
             TestResult result = runTest(testFile);
             totalTests++;
             
             if (result.allPassed) {
                 passedTests++;
-                System.out.println("\n✓ TEST PASSED");
+                System.out.println("\n[PASS] TEST PASSED");
             } else {
-                System.out.println("\n✗ TEST FAILED");
+                System.out.println("\n[FAIL] TEST FAILED");
             }
             
             System.out.println(result.details);
         }
         
-        System.out.println("\n" + "=".repeat(80));
+        System.out.println("\n" + "=".repeat(20));
         System.out.println("SUMMARY: " + passedTests + "/" + totalTests + " tests passed");
-        System.out.println("=".repeat(80));
+        System.out.println("=".repeat(20));
     }
     
     public TestResult runTest(File testFile) {
@@ -182,19 +182,19 @@ public class TestRunner {
         details.append(String.format("    Actual:   %s\n", filteredActual));
         
         if (filteredActual.size() != expected.size()) {
-            details.append(String.format("  ✗ Length mismatch (Expected: %d, Actual: %d)\n", 
+            details.append(String.format("  [FAIL] Length mismatch (Expected: %d, Actual: %d)\n", 
                         expected.size(), filteredActual.size()));
             return false;
         }
         
         for (int i = 0; i < filteredActual.size(); i++) {
             if (!filteredActual.get(i).equals(expected.get(i))) {
-                details.append(String.format("  ✗ Mismatch at index %d\n", i));
+                details.append(String.format("  [FAIL] Mismatch at index %d\n", i));
                 return false;
             }
         }
         
-        details.append(String.format("  ✓ PASSED\n"));
+        details.append(String.format("  [PASS] PASSED\n"));
         return true;
     }
     
@@ -241,7 +241,7 @@ public class TestRunner {
         for (ProcessResult exp : expected) {
             Process act = actualMap.get(exp.name);
             if (act == null) {
-                details.append(String.format("  ✗ Process %s: Not found\n", exp.name));
+                details.append(String.format("  [FAIL] Process %s: Not found\n", exp.name));
                 allMatch = false;
                 continue;
             }
@@ -250,7 +250,7 @@ public class TestRunner {
             boolean tatMatch = act.getTurnaroundTime() == exp.turnaroundTime;
             
             if (!wtMatch || !tatMatch) {
-                details.append(String.format("  ✗ Process %s mismatch:\n", exp.name));
+                details.append(String.format("  [FAIL] Process %s mismatch:\n", exp.name));
                 if (!wtMatch) {
                     details.append(String.format("    Waiting Time: Expected %d, Actual %d\n", 
                                 exp.waitingTime, act.getWaitingTime()));
@@ -264,7 +264,7 @@ public class TestRunner {
         }
         
         if (allMatch) {
-            details.append(String.format("  ✓ PASSED\n"));
+            details.append(String.format("  [PASS] PASSED\n"));
         }
         
         return allMatch;
@@ -272,11 +272,11 @@ public class TestRunner {
     
     private boolean compareDoubles(double actual, double expected, StringBuilder details, String label) {
         if (Math.abs(actual - expected) < 0.01) {
-            details.append(String.format("  ✓ %s: PASSED (Expected: %.2f, Actual: %.2f)\n", 
+            details.append(String.format("  [PASS] %s: PASSED (Expected: %.2f, Actual: %.2f)\n", 
                         label, expected, actual));
             return true;
         } else {
-            details.append(String.format("  ✗ %s: FAILED (Expected: %.2f, Actual: %.2f)\n", 
+            details.append(String.format("  [FAIL] %s: FAILED (Expected: %.2f, Actual: %.2f)\n", 
                         label, expected, actual));
             return false;
         }
@@ -464,31 +464,31 @@ public class TestRunner {
         int totalTests = 0;
         int passedTests = 0;
         
-        System.out.println("=".repeat(80));
+        System.out.println("=".repeat(20));
         System.out.println("Running AG Scheduler Tests");
-        System.out.println("=".repeat(80));
+        System.out.println("=".repeat(20));
         
         for (File testFile : testFiles) {
-            System.out.println("\n" + "=".repeat(80));
+            System.out.println("\n" + "=".repeat(20));
             System.out.println("Testing: " + testFile.getName());
-            System.out.println("=".repeat(80));
+            System.out.println("=".repeat(20));
             
             AGTestResult result = runAGTest(testFile);
             totalTests++;
             
             if (result.agPassed) {
                 passedTests++;
-                System.out.println("\n✓ TEST PASSED");
+                System.out.println("\n[PASS] TEST PASSED");
             } else {
-                System.out.println("\n✗ TEST FAILED");
+                System.out.println("\n[FAIL] TEST FAILED");
             }
             
             System.out.println(result.details);
         }
         
-        System.out.println("\n" + "=".repeat(80));
+        System.out.println("\n" + "=".repeat(20));
         System.out.println("AG SUMMARY: " + passedTests + "/" + totalTests + " tests passed");
-        System.out.println("=".repeat(80));
+        System.out.println("=".repeat(20));
     }
     
     public AGTestResult runAGTest(File testFile) {
@@ -525,6 +525,8 @@ public class TestRunner {
     private boolean testAG(List<Process> processes, AGExpectedOutput expected, StringBuilder details) {
         AG_Scheduling ag = new AG_Scheduling(processes);
         ag.simulate();
+        
+        ag.printResults();
         
         List<String> actualOrder = ag.getExecutionOrder();
         List<Process> actualProcesses = ag.getProcesses();
@@ -572,7 +574,7 @@ public class TestRunner {
         for (AGProcessResult exp : expected) {
             Process act = actualMap.get(exp.name);
             if (act == null) {
-                details.append(String.format("  ✗ Process %s: Not found\n", exp.name));
+                details.append(String.format("  [FAIL] Process %s: Not found\n", exp.name));
                 allMatch = false;
                 continue;
             }
@@ -582,7 +584,7 @@ public class TestRunner {
             boolean qhMatch = compareQuantumHistory(act.getQuantumHistory(), exp.quantumHistory);
             
             if (!wtMatch || !tatMatch || !qhMatch) {
-                details.append(String.format("  ✗ Process %s mismatch:\n", exp.name));
+                details.append(String.format("  [FAIL] Process %s mismatch:\n", exp.name));
                 if (!wtMatch) {
                     details.append(String.format("    Waiting Time: Expected %d, Actual %d\n", 
                                 exp.waitingTime, act.getWaitingTime()));
@@ -600,7 +602,7 @@ public class TestRunner {
         }
         
         if (allMatch) {
-            details.append(String.format("  ✓ PASSED\n"));
+            details.append(String.format("  [PASS] PASSED\n"));
         }
         
         return allMatch;
