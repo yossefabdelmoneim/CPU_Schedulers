@@ -40,18 +40,19 @@ public void execute() {
         if (!readyQueue.isEmpty()) {
 
             Process selected = getHighestPriority(readyQueue);
+            //this variable will be set if the before process finished
             if(nextSelected != null) {
-                if (nextSelected != selected) {
+                //if the predetermined next process to run is no longer highest prio after switch
+                while (nextSelected != selected) {
                     executionOrder.add(nextSelected.getName());
-                    for (Process p : readyQueue) {
-                        if(p!=nextSelected) {
-                            p.incrementTotalReadyQueueTime(contextSwitching);
-                        }
 
-                    }
-                    currentTime += contextSwitching;
-                    //check for arrivals during/after context switch
-                    addArrivingProcesses(readyQueue, completed, currentTime);
+                    //context switch again, and pick the next process
+                    contextSwitch(readyQueue, completed, currentProcess);
+                    //nextselected = selected for the next iteration, keep going until the proc
+                    //before context switch is still the best proc after context switch
+                    nextSelected = selected;
+                    selected = getHighestPriority(readyQueue);
+
                 }
             }
             nextSelected = null;
@@ -59,18 +60,33 @@ public void execute() {
 
             //context switching
             if (currentProcess != null && currentProcess != selected) {
-                Process oldSelected = selected;
-                contextSwitch(readyQueue, completed, currentProcess);
 
+                //if this process just arrived, special context switch
+                if (selected.getArrivalTime() == currentTime){
+                    for (Process p : readyQueue) {
+                        //do not count the context switch time for the just arrived process
+                        if(p!=selected) {
+                            p.incrementTotalReadyQueueTime(contextSwitching);
+                        }
+                    }
+                    currentTime += contextSwitching;
+                    //check for arrivals during/after context switch
+                    addArrivingProcesses(readyQueue, completed, currentTime);
+                }
+                else {
+                    //regular context switch
+                    contextSwitch(readyQueue, completed, currentProcess);
+                }
                 //RECHECK again after context switching and incrementing current time by context switch time
+                Process oldSelected = selected;
                 selected = getHighestPriority(readyQueue);
                 if (selected != oldSelected) {
                     executionOrder.add(oldSelected.getName());
+
                     for (Process p : readyQueue) {
                         if(p!=oldSelected) {
                         p.incrementTotalReadyQueueTime(contextSwitching);
                         }
-
                     }
                     currentTime += contextSwitching;
                     //check for arrivals during/after context switch
@@ -84,6 +100,7 @@ public void execute() {
             currentProcess = selected;
             executionOrder.add(selected.getName());
 
+            //increment ready queue waiting time for all except executing process
             for (Process p : readyQueue) {
                 if (p != selected) {
                     p.incrementTotalReadyQueueTime(1);
@@ -102,6 +119,7 @@ public void execute() {
                 completed.add(selected);
                 readyQueue.remove(selected);
                 addArrivingProcesses(readyQueue, completed, currentTime);
+                //before context switching check the next process to run
                 nextSelected = getHighestPriority(readyQueue);
                 contextSwitch(readyQueue, completed, currentProcess);
 
