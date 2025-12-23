@@ -47,7 +47,7 @@ public void execute() {
                     executionOrder.add(nextSelected.getName());
 
                     //context switch again, and pick the next process
-                    contextSwitch(readyQueue, completed, currentProcess);
+                    contextSwitch(readyQueue, completed);
                     //nextselected = selected for the next iteration, keep going until the proc
                     //before context switch is still the best proc after context switch
                     nextSelected = selected;
@@ -75,7 +75,7 @@ public void execute() {
                 }
                 else {
                     //regular context switch
-                    contextSwitch(readyQueue, completed, currentProcess);
+                    contextSwitch(readyQueue, completed);
                 }
                 //RECHECK again after context switching and incrementing current time by context switch time
                 Process oldSelected = selected;
@@ -121,7 +121,7 @@ public void execute() {
                 addArrivingProcesses(readyQueue, completed, currentTime);
                 //before context switching check the next process to run
                 nextSelected = getHighestPriority(readyQueue);
-                contextSwitch(readyQueue, completed, currentProcess);
+                contextSwitch(readyQueue, completed);
 
                 currentProcess = null;
             }
@@ -141,7 +141,7 @@ public void execute() {
         }
     }
 
-    private void contextSwitch(List<Process> readyQueue, List<Process> completed, Process currentProcess) {
+    private void contextSwitch(List<Process> readyQueue, List<Process> completed) {
         for (Process p : readyQueue) {
 
             p.incrementTotalReadyQueueTime(contextSwitching);

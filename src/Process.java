@@ -14,7 +14,6 @@ public class Process {
     private int turnaroundTime;
     private int completionTime;
     private int totalReadyQueueTime; //GOZ2 SEIF
-    private int last;
 
     private List<Integer> quantumHistory;
 
@@ -26,7 +25,7 @@ public class Process {
         this.priority = priority;
         this.quantum = quantum;
         this.totalReadyQueueTime = 0; //GOZ2 SEIF
-        this.last = arrivalTime;
+
 
         quantumHistory = new ArrayList<Integer>();
         quantumHistory.add(quantum);
@@ -41,7 +40,7 @@ public class Process {
         this.priority = other.priority;
         this.quantum = other.quantum;
         this.totalReadyQueueTime = other.totalReadyQueueTime;
-        this.last = other.last;
+
 
         quantumHistory = new ArrayList<Integer>();
         for (int i = 0; i < other.quantumHistory.size(); i++) {
@@ -67,7 +66,6 @@ public class Process {
         return total;
     }
     //GOZ2 SEIF
-    public int getLast() { return last; }
     public int getReadyQueueTime() {
         return totalReadyQueueTime;
     }
@@ -104,7 +102,7 @@ public class Process {
     public void setQuantumHistory(List<Integer> history) {
         quantumHistory = history;
     }
-    public void setLast(int last) {this.last = last;}
+
 
     //calculation
     //GOZ2 SEIF
